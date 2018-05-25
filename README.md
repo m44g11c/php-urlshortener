@@ -5,6 +5,7 @@ Info:
 * PHP - core
 * MySQL - db
 * Smarty - template engine
+* Bootstrap - css
 * http://ip-api.com/php/ - get location
 
 Screenshots:
