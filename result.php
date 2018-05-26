@@ -3,7 +3,6 @@
   require_once 'class/Shortener.class.php';
   $Shortener = new Shortener();
 
-  var_dump($_POST['url']);
   if (isset($_POST['url'])) {
     $last_id = $Shortener->addRecord($_POST['url']);
   }
