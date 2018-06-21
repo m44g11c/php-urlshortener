@@ -1,4 +1,4 @@
-RewriteEngine on
+﻿RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /redirect.php?url=$1 [NC,L,QSA]
+RewriteRule .* index.php [L]
