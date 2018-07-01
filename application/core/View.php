@@ -20,11 +20,6 @@
       require 'application/views/layouts/'.$this->layout.'.php';
     }
 
-    public function redirect($url) {
-      header('location: '.$url);
-      exit;
-    }
-
     static function errorCode($code) {
       http_response_code($code);
       require 'application/views/errors/'.$code.'.php';

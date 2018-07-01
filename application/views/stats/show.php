@@ -3,10 +3,10 @@
     <div class="col-md-12 ">
       <div class="jumbotron mt-5">
         <?php 
-        if (isset($vars['data'])) {
+        if ($vars['counter'] != null) {
         ?>
           <div class="alert alert-dark" role="alert">
-            Link: <a href="{$link}">{$link}</a> Clicks: {$counter}
+            Link: <a href="<?php echo $vars['link']?>"><?php echo $vars['link']?></a> Clicks: <?php echo $vars['counter']?>
           </div>
           <table class="table table-striped">
             <thead>
@@ -40,7 +40,7 @@
           </table>
         <?php if ($vars['no data'] == 'true') { ?>
               <div class="alert alert-info" role="alert">
-                Link: <a href="{$link}">{$link}</a> No data yet
+                Link: <a href="<?php echo $vars['link']?>"><?php echo $vars['link']?></a> No data yet
               </div>
         <?php } ?>
           

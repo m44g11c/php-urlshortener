@@ -19,12 +19,15 @@
         }
       
       }
+ 
+    public function redirectAction($url) {
 
-    public function redirectAction() {
-
-      if (isset($_GET['url'])) {
-        $link = $this->model->getLink($_GET['url']);
-        $this->view->redirect($link['name']);
-      }
+      if (isset($url)) {
+        $link = $this->model->getLink($url);
+        $stats = $this->model->loadStats($url);
+        $counter = $this->model->loadCounter($url);
+        $this->redirect($link['name']);
+      }      
     }
+
   }

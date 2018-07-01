@@ -2,11 +2,7 @@
 
   namespace application\lib;
 
-  use PDO;
-
   class Db {
-
-    protected $db;
     
     public function __construct(){
 
@@ -16,64 +12,54 @@
       
     }
 
-    public function getRecord($id) {
+    public function getSingle($field, $table, $name, $value) {
+      $value = mysqli_escape_string($this->link, $value);
+      $query = mysqli_query($this->link, "SELECT $field FROM $table WHERE $name ='$value'");
+      echo mysqli_error($this->link);
+      $result = mysqli_fetch_assoc($query);
+      return $result;
+    }
+
+    public function getArray($table, $name, $value) {
+      $value = mysqli_escape_string($this->link, $value);
       $result = array();
-      $query = mysqli_query($this->link, "SELECT * FROM urls WHERE id = '$id'");
+      $query = mysqli_query($this->link, "SELECT * FROM $table WHERE $name = '$value'");
       echo mysqli_error($this->link);
       if(mysqli_num_rows($query) != 0){
           while($row = mysqli_fetch_assoc($query)){
-              $result = $row;
+              $result[] = $row;
           }
         }  
       return $result;
     }
+
+    public function insert($data, $table) {
+        $columns  = "";
+        $values   = "";
+        foreach ($data as $column => $value) {
+          $columns  .= $columns ? ', ' : '';
+          $columns  .= "`$column`";
+          $values   .= $values  ? ', ' : '';
+          $value = mysqli_escape_string($this->link, $value);
+          $values   .= "'$value'";
+        }
+        $sql = "INSERT INTO $table ($columns) VALUES ($values)";
+        $query = mysqli_query($this->link, $sql);
+        echo mysqli_error($this->link);
+        $last_id = $this->link->insert_id;
+        return $last_id;
+      }
     
-    public function getRecordId($url) {
-      $url = mysqli_escape_string($this->link, $url);
-      $query = mysqli_query($this->link, "SELECT id FROM urls WHERE short ='$url'");
-      echo mysqli_error($this->link);
-      $result = mysqli_fetch_assoc($query);
-      return $result['id'];
-    }
-
-    public function insertRecord($url_name, $short_name) {
-      $query = mysqli_query($this->link, "INSERT INTO urls (name, short) VALUES ('$url_name', '$short_name')");
-      echo mysqli_error($this->link);
-      $last_id = $this->link->insert_id;
-      return $last_id;
-    }
-
-    public function getLinkByShortName($short) {
-      $short = mysqli_escape_string($this->link, $short);
-      $query = mysqli_query($this->link, "SELECT name FROM urls WHERE short ='$short'");
-      echo mysqli_error($this->link);
-      $result = mysqli_fetch_assoc($query);
-      return $result;
-    }
-
-    public function saveStats($data, $url) {
-      $record_id = $this->getRecordId($url);
-      $date = mysqli_escape_string($this->link, $data['date']);
-      $ip = mysqli_escape_string($this->link, $data['ip']);
-      $region = mysqli_escape_string($this->link, $data['region']);
-      $browser = mysqli_escape_string($this->link, $data['browser']);
-      $version = mysqli_escape_string($this->link, $data['version']);
-      $os = mysqli_escape_string($this->link, $data['os']);
-      $query = mysqli_query($this->link, "INSERT INTO stats (record_id, r_date, ip, region, browser, version, os ) VALUES ('$record_id', '$date', '$ip', '$region', '$browser', '$version', '$os')");
-      echo mysqli_error($this->link);
-    }
-
-    public function getStats($id) {
-      $id = mysqli_escape_string($this->link, $id);
-      $result = array();
-      $query = mysqli_query($this->link, "SELECT * FROM stats WHERE record_id = '$id'");
-      echo mysqli_error($this->link);
-      if(mysqli_num_rows($query) != 0){
-          while($row = mysqli_fetch_assoc($query)){
-              $result['items'][] = $row;
-          }
-        }  
-      return $result;
-    }
+    public  function update($data, $table, $where) {
+        $sets = '';
+        foreach ($data as $column => $value) {
+          $sets .= $sets ? ', ' : '';
+          $value = mysqli_escape_string($this->link, $value);
+          $sets .= "`$column` = '$value'";      
+        }
+        $sql = "UPDATE $table SET $sets WHERE $where";
+        $query = mysqli_query($this->link, $sql);
+        echo mysqli_error($this->link);
+      }
 
   }
